@@ -23,9 +23,9 @@ Currently supported devices:
 
 ## Supported Devices
 
-| Device | Battery percentage | Charging status |
-|---|---|---|
-| Razer Viper Ultimate | Yes | Yes |
+| Device                      | Battery percentage          | Charging status         |
+| --------------------------- | --------------------------- | ----------------------- |
+| Razer Viper Ultimate        | Yes                         | Yes                     |
 | HyperX Cloud III S Wireless | Yes, through the USB dongle | Not currently supported |
 
 The project currently checks these USB identifiers:
@@ -35,20 +35,15 @@ The project currently checks these USB identifiers:
 
 Compatibility depends on the device and receiver exposing the expected HID protocol.
 
-## Screenshot
+## Screenshots
 
-To add your own screenshot later:
+### Battery Level
 
-1. Create a folder named `docs` in the repository's root.
-2. Take a screenshot of the plugin running in Stream Deck.
-3. Save the image in that folder as `screenshot.png`.
-4. Add the following Markdown to this section:
+![Battery level](docs/battery.png)
 
-   ```md
-   ![Wireless Peripheral Battery plugin running in Stream Deck](docs/screenshot.png)
-   ```
+### Stream Deck Plugin
 
-You can use a different filename, as long as the path in the Markdown matches it.
+![Plugin](docs/plugin.png)
 
 ## Requirements
 
