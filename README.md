@@ -60,7 +60,7 @@ Compatibility depends on the device and receiver exposing the expected HID proto
 1. Download or clone this repository.
 2. Make sure the .NET SDK and Stream Deck are installed.
 3. Close Stream Deck.
-4. Run `instalar.bat`.
+4. Run `install.bat`.
 5. The script builds the project in Release mode, copies the plugin to the Stream Deck plugins directory, and launches Stream Deck again.
 6. In Stream Deck, find the **Wireless Peripheral Battery** category and add the relevant action to a key.
 
