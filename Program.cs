@@ -6,7 +6,7 @@ namespace RazerBattery
     {
         private static void Main(string[] args)
         {
-            // Stream Deck launches this executable with the connection arguments.
+            // Stream Deck lanza este exe con los argumentos de conexión.
             SDWrapper.Run(args);
         }
     }

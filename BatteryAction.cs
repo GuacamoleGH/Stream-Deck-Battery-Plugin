@@ -22,7 +22,7 @@ namespace RazerBattery
             : base(connection, payload, BatteryMonitor.HyperX) { }
     }
 
-    /// <summary>Shared logic: draws the icon and percentage for a BatteryMonitor.</summary>
+    /// <summary>Lógica común: dibuja el icono y el porcentaje de un BatteryMonitor.</summary>
     public abstract class BatteryActionBase : KeypadBase
     {
         private static readonly SKColor Gray = SKColor.Parse("#9aa0a6");
@@ -44,7 +44,7 @@ namespace RazerBattery
 
         public override void KeyPressed(KeyPayload payload)
         {
-            // Force a fresh reading; the key is updated on the next OnTick.
+            // Forzar una lectura nueva; el icono se actualiza en el siguiente OnTick.
             monitor.RefreshNow();
         }
 
@@ -58,7 +58,7 @@ namespace RazerBattery
             }
             catch (Exception ex)
             {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, "Error rendering key: " + ex);
+                Logger.Instance.LogMessage(TracingLevel.ERROR, "Error dibujando la tecla: " + ex);
             }
         }
 
@@ -88,16 +88,26 @@ namespace RazerBattery
             }
         }
 
-        /// <summary>Selects the icon based on the current status.</summary>
+        /// <summary>
+        /// Hay un porcentaje que mostrar con normalidad: lectura buena, o dispositivo dormido
+        /// (el dongle está pero no contesta) con un valor conocido de antes.
+        /// </summary>
+        private static bool IsUsable(BatteryReading r)
+        {
+            return r.Percent >= 0
+                && (r.Status == BatteryStatus.Ok || r.Status == BatteryStatus.NoResponse);
+        }
+
+        /// <summary>Qué icono toca según el estado.</summary>
         private static string IconFor(BatteryReading r)
         {
-            if (r.Status != BatteryStatus.Ok || r.Percent < 0)
+            if (!IsUsable(r))
             {
-                return "pluginAction.png";   // gray: no fresh reading
+                return "pluginAction.png";   // gris: aún sin ningún valor, o dispositivo no encontrado
             }
-            if (r.Charging)
+            if (r.Status == BatteryStatus.Ok && r.Charging)
             {
-                return "battcharge.png";     // blue with lightning bolt
+                return "battcharge.png";     // azul con rayo
             }
             if (r.Percent > 50)
             {
@@ -117,7 +127,7 @@ namespace RazerBattery
                 SKBitmap bitmap;
                 if (!IconCache.TryGetValue(fileName, out bitmap))
                 {
-                    // The executable is in the plugin folder, next to the Images folder.
+                    // El exe está en la carpeta del plugin, junto a la carpeta Images.
                     string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", fileName);
                     bitmap = SkiaTools.LoadImage(path);
                     IconCache[fileName] = bitmap;
@@ -131,10 +141,10 @@ namespace RazerBattery
             canvas.Clear(SKColors.Black);
             canvas.DrawBitmap(LoadIcon(IconFor(r)), 0, 0);
 
-            bool live = r.Status == BatteryStatus.Ok;
+            bool live = IsUsable(r);
             bool hasValue = r.Percent >= 0;
 
-            // Percentage below the battery icon
+            // Porcentaje debajo de la batería del icono
             string text = hasValue ? r.Percent + "%" : "--";
             using (SKFont font = SkiaTools.CreateFont("Arial", 28, SKFontStyle.Bold))
             using (var paint = new SKPaint { Color = live ? SKColors.White : Gray, IsAntialias = true })
@@ -143,18 +153,17 @@ namespace RazerBattery
                 canvas.DrawTextLine(text, font, paint, new SKPoint(x, 96));
             }
 
-            // Status message when no fresh reading is available (above the battery icon)
+            // Mensaje de estado cuando no hay lectura fresca (arriba de la batería)
             string note = label;
             switch (r.Status)
             {
-                case BatteryStatus.Starting: note = "reading..."; break;
-                case BatteryStatus.NoDevice: note = "no device"; break;
-                case BatteryStatus.NoResponse: note = "sleeping"; break;
+                case BatteryStatus.Starting: note = "leyendo..."; break;
+                case BatteryStatus.NoDevice: note = "sin dongle"; break;
             }
             if (note != null)
             {
-                // Label (successful reading) is light; status messages are gray.
-                SKColor noteColor = r.Status == BatteryStatus.Ok ? LabelColor : Gray;
+                // Etiqueta (lectura buena) en claro; avisos de estado en gris.
+                SKColor noteColor = live ? LabelColor : Gray;
                 using (SKFont small = SkiaTools.CreateFont("Arial", 19, SKFontStyle.Bold))
                 using (var paint = new SKPaint { Color = noteColor, IsAntialias = true })
                 {

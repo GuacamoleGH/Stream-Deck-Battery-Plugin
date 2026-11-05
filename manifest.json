@@ -2,33 +2,33 @@
   "SDKVersion": 2,
   "Author": "Jose",
   "CodePath": "RazerBattery.exe",
-  "Description": "Displays the battery level of the Razer Viper Ultimate and HyperX Cloud III S Wireless through direct HID communication, without Synapse or NGENUITY.",
-  "Name": "Peripheral Battery",
+  "Description": "Muestra la batería del Razer Viper Ultimate y de los HyperX Cloud III S Wireless leyéndola directamente por HID, sin Synapse ni NGENUITY.",
+  "Name": "Batería periféricos",
   "Icon": "Images/pluginIcon",
   "CategoryIcon": "Images/categoryIcon",
   "URL": "",
   "Version": "1.1.0.0",
-  "Category": "Peripheral Battery",
+  "Category": "Batería periféricos",
   "OS": [
     { "Platform": "windows", "MinimumVersion": "10" }
   ],
   "Software": { "MinimumVersion": "6.4" },
   "Actions": [
     {
-      "Name": "Viper Ultimate Battery",
+      "Name": "Batería Viper Ultimate",
       "UUID": "com.jose.razerbattery.battery",
       "Icon": "Images/actionIcon",
-      "Tooltip": "Displays the Razer Viper Ultimate battery percentage. Press the key to refresh the reading.",
+      "Tooltip": "Muestra el porcentaje de batería del Razer Viper Ultimate. Púlsala para forzar una lectura.",
       "SupportedInMultiActions": false,
       "States": [
         { "Image": "Images/keyIcon", "TitleAlignment": "bottom", "ShowTitle": false }
       ]
     },
     {
-      "Name": "HyperX Cloud III S Battery",
+      "Name": "Batería HyperX Cloud III S",
       "UUID": "com.jose.razerbattery.hyperx",
       "Icon": "Images/actionIcon",
-      "Tooltip": "Displays the HyperX Cloud III S Wireless battery percentage. Press the key to refresh the reading.",
+      "Tooltip": "Muestra el porcentaje de batería de los HyperX Cloud III S Wireless. Púlsala para forzar una lectura.",
       "SupportedInMultiActions": false,
       "States": [
         { "Image": "Images/keyIcon", "TitleAlignment": "bottom", "ShowTitle": false }

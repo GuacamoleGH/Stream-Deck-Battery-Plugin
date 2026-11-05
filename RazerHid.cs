@@ -20,8 +20,8 @@ namespace RazerBattery
     }
 
     /// <summary>
-    /// Reads a Razer Viper Ultimate battery over HID using the Razer protocol
-    /// (90-byte packets sent as feature reports), without requiring Synapse.
+    /// Lee la batería de un Razer Viper Ultimate por HID usando el protocolo Razer
+    /// (paquetes de 90 bytes enviados como feature report), sin necesitar Synapse.
     /// </summary>
     internal static class RazerHid
     {
@@ -30,7 +30,7 @@ namespace RazerBattery
         private const byte StatusBusy = 0x01;
         private const byte StatusSuccess = 0x02;
 
-        // Razer commands: class 0x07 = power
+        // Comandos Razer: clase 0x07 = energía
         private const byte ClassPower = 0x07;
         private const byte CmdBatteryLevel = 0x80;
         private const byte CmdChargingStatus = 0x84;
@@ -38,13 +38,13 @@ namespace RazerBattery
         private static readonly Dictionary<int, string> Products = new Dictionary<int, string>
         {
             { 0x007A, "Viper Ultimate (cable)" },
-            { 0x007B, "Viper Ultimate (wireless)" }
+            { 0x007B, "Viper Ultimate (inalámbrico)" }
         };
 
-        // Typical transaction IDs for Razer wireless mice; tried in order.
+        // Transaction IDs típicos de los ratones inalámbricos Razer; se prueban en orden.
         private static readonly byte[] TransactionIds = { 0x3F, 0x1F, 0xFF };
 
-        // The last successful values, tried first next time.
+        // Lo último que funcionó, para probarlo primero la siguiente vez.
         private static string lastPath;
         private static int lastTid = -1;
 
@@ -97,7 +97,7 @@ namespace RazerBattery
 
                         byte[] charge = Query(handle, tid, ClassPower, CmdChargingStatus);
 
-                        // arguments[1] is located at byte 9 of the response
+                        // arguments[1] está en el byte 9 de la respuesta
                         percent = (int)Math.Round(level[9] / 255.0 * 100.0);
                         charging = charge != null && charge[9] == 1;
                         deviceName = info.Name;
@@ -152,7 +152,7 @@ namespace RazerBattery
 
         /// <summary>
         /// Abre la interfaz HID con acceso 0 (igual que hidapi): basta para los feature reports
-        /// and prevents Windows from rejecting it because it is a mouse.
+        /// y evita que Windows lo rechace por ser un ratón.
         /// </summary>
         private static SafeFileHandle Open(string path)
         {
@@ -187,7 +187,7 @@ namespace RazerBattery
             return buf;
         }
 
-        /// <summary>Returns the 90-byte response (without report ID), or null on failure.</summary>
+        /// <summary>Devuelve la respuesta de 90 bytes (sin report ID) o null si falla.</summary>
         private static byte[] Query(SafeFileHandle handle, byte tid, byte commandClass, byte commandId)
         {
             byte[] request = BuildRequest(tid, commandClass, commandId, 0x02);

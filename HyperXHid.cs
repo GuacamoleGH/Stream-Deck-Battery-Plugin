@@ -5,9 +5,9 @@ using HidSharp;
 namespace RazerBattery
 {
     /// <summary>
-    /// Reads the HyperX Cloud III S Wireless battery through the USB dongle vendor collection
+    /// Lee la batería de los HyperX Cloud III S Wireless (dongle USB) por la colección vendor
     /// usage_page 0x01C0 de la interfaz 3: report 0x0C, comando "02 03 01 00 06", respuesta con
-    /// the percentage is in byte 6. Protocol verified on the user's device with hidapi.
+    /// el porcentaje en el byte 6. Protocolo comprobado en el equipo del usuario con hidapi.
     /// </summary>
     internal static class HyperXHid
     {
@@ -37,8 +37,8 @@ namespace RazerBattery
         }
 
         /// <summary>
-        /// Returns true if the receiver responded. value is the raw byte: 0..100 = percentage,
-        /// greater than 100 = headphones are powered off.
+        /// Devuelve true si el dongle contestó. value es el byte crudo: 0..100 = porcentaje,
+        /// más de 100 = auriculares apagados.
         /// </summary>
         public static bool TryReadBattery(List<HidDevice> devices, out int value, out string name)
         {
@@ -92,7 +92,7 @@ namespace RazerBattery
                         request[5] = OpcodeBattery;
                         stream.Write(request);
 
-                        // Other unsolicited reports may arrive (status changes); they are ignored.
+                        // Pueden llegar otros reports sin pedirlos (cambios de estado): se ignoran.
                         DateTime deadline = DateTime.UtcNow.AddSeconds(2);
                         byte[] buffer = new byte[inLen];
                         while (DateTime.UtcNow < deadline)
@@ -119,7 +119,7 @@ namespace RazerBattery
                     }
                     catch (Exception)
                     {
-                        // This collection is not suitable; try the next one.
+                        // Esta colección no sirve: se prueba la siguiente.
                     }
                 }
             }
@@ -128,7 +128,7 @@ namespace RazerBattery
             return false;
         }
 
-        /// <summary>Try vendor collections 0x01C0 first (the last successful one is tried first).</summary>
+        /// <summary>Primero las colecciones vendor 0x01C0 (la última que funcionó, la primera).</summary>
         private static IEnumerable<HidDevice> Candidates(List<HidDevice> devices)
         {
             var preferred = new List<HidDevice>();
@@ -162,7 +162,7 @@ namespace RazerBattery
                 }
             }
 
-            // If no vendor collection was identified, try them all.
+            // Si ninguna se identificó como vendor, se prueban todas.
             if (preferred.Count == 0)
             {
                 return others;

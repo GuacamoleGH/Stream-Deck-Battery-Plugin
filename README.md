@@ -1,163 +1,112 @@
-# Wireless Peripheral Battery for Stream Deck
+# Batería periféricos para Stream Deck
 
-A plugin for **Elgato Stream Deck** that displays the battery level of supported wireless peripherals by communicating directly with their USB HID interfaces—without requiring Razer Synapse or HyperX NGENUITY to be running.
+Plugin de Stream Deck para Windows que muestra en una tecla el porcentaje de batería de:
 
-Currently supported devices:
+- **Razer Viper Ultimate** (inalámbrico y por cable)
+- **HyperX Cloud III S Wireless** (dongle USB 2.4 GHz)
 
-- **Razer Viper Ultimate**
-- **HyperX Cloud III S Wireless**
+Lee los dispositivos **directamente por HID**: no necesita Razer Synapse ni HyperX NGENUITY, ni ningún servidor o script en segundo plano. Stream Deck arranca el plugin solo.
 
-## Features
+<!-- Añade aquí una captura: ![Teclas del plugin](docs/captura.png) -->
 
-- Displays the battery percentage on a Stream Deck key.
-- Automatically refreshes the battery reading every 30 seconds.
-- Allows an immediate refresh by pressing the key.
-- Uses colored battery icons:
-  - **Green:** above 50%.
-  - **Yellow:** 21–50%.
-  - **Red:** 20% or below.
-  - **Blue with a lightning bolt:** charging (Razer).
-  - **Gray:** battery information unavailable.
-- Handles disconnected or unresponsive devices.
-- Reads battery information without requiring the manufacturer's companion software.
+## Qué muestra la tecla
 
-## Supported Devices
+| Situación | Icono |
+|---|---|
+| Más del 50 % | Verde |
+| Entre 21 % y 50 % | Amarillo |
+| 20 % o menos | Rojo |
+| Cargando (solo Viper) | Azul con rayo |
+| Dispositivo dormido o apagado | Mantiene el icono de color y el último porcentaje conocido |
+| Sin dongle o arrancando | Gris, con un aviso (y el último valor si lo hubo) |
 
-| Device                      | Battery percentage          | Charging status         |
-| --------------------------- | --------------------------- | ----------------------- |
-| Razer Viper Ultimate        | Yes                         | Yes                     |
-| HyperX Cloud III S Wireless | Yes, through the USB dongle | Not currently supported |
+Cada tecla lleva el porcentaje debajo de la batería y una etiqueta con el nombre del dispositivo. Se actualiza cada 30 segundos; al pulsar la tecla fuerza una lectura inmediata.
 
-The project currently checks these USB identifiers:
+## Requisitos
 
-- **Razer:** VID `1532`, PID `007A` and `007B`.
-- **HyperX:** VID `03F0`, PID `02CC` and `06BE`.
+- Windows 10 u 11
+- Stream Deck 6.4 o superior
+- Para compilar: [.NET SDK](https://dotnet.microsoft.com/download) 8 o superior (`winget install Microsoft.DotNet.SDK.8`)
 
-Compatibility depends on the device and receiver exposing the expected HID protocol.
+El plugin en sí usa .NET Framework 4.8, que ya viene con Windows.
 
-## Screenshots
+## Instalación
 
-### Battery Level
+1. Clona o descarga el repositorio.
+2. Ejecuta `instalar.bat`. El script:
+   - compila el proyecto en modo Release,
+   - cierra Stream Deck,
+   - copia el resultado a `%APPDATA%\Elgato\StreamDeck\Plugins\com.jose.razerbattery.sdPlugin`,
+   - vuelve a abrir Stream Deck.
+3. En Stream Deck, abre la categoría **Batería periféricos** y arrastra a una tecla **Batería Viper Ultimate** y/o **Batería HyperX Cloud III S**.
 
-![Battery level](docs/battery.png)
+Para desinstalarlo, borra esa carpeta de `Plugins` con Stream Deck cerrado.
 
-### Stream Deck Plugin
+## Cómo funciona
 
-![Plugin](docs/plugin.png)
-
-## Requirements
-
-- Windows 10 or Windows 11.
-- Elgato Stream Deck 6.4 or later.
-- .NET Framework 4.8.
-- A compatible .NET SDK for building the project.
-- A supported peripheral connected, preferably through its wireless USB receiver.
-
-## Installation
-
-### Install from source
-
-1. Download or clone this repository.
-2. Make sure the .NET SDK and Stream Deck are installed.
-3. Close Stream Deck.
-4. Run `install.bat`.
-5. The script builds the project in Release mode, copies the plugin to the Stream Deck plugins directory, and launches Stream Deck again.
-6. In Stream Deck, find the **Wireless Peripheral Battery** category and add the relevant action to a key.
-
-The installer copies the plugin to:
-
-```text
-%APPDATA%\Elgato\StreamDeck\Plugins\com.jose.razerbattery.sdPlugin
-```
-
-> The installer closes and restarts Stream Deck during installation.
-
-### Manual installation
-
-1. Build the project in `Release` configuration.
-2. Copy the output files, including `RazerBattery.exe`, `manifest.json`, and the `Images` folder, into the plugin directory shown above.
-3. Restart Stream Deck.
-
-## Usage
-
-1. Add the **Razer Viper Ultimate Battery** or **HyperX Cloud III S Wireless Battery** action to a Stream Deck key.
-2. Wait for the first battery reading.
-3. The key will display the battery percentage.
-4. Press the key to request an immediate refresh.
-
-Possible statuses include:
-
-- `reading...` — the first query is still in progress.
-- `no mouse` — no compatible device was detected.
-- `sleeping` — the device or receiver did not respond.
-- `--` — no battery percentage is available yet.
-
-## How It Works
-
-The plugin communicates with the peripherals through USB HID.
+Cada dispositivo tiene un monitor que consulta la batería en segundo plano y comparte el resultado entre todas las teclas que lo muestren.
 
 ### Razer Viper Ultimate
 
-Sends battery commands using Razer's HID Feature Reports, reads the battery level and charging status, and converts the returned value into a percentage.
+Usa el protocolo Razer de 90 bytes enviado como *feature report* (`HidD_SetFeature` / `HidD_GetFeature`), abriendo la interfaz HID con acceso 0 igual que hace `hidapi`.
+
+- VID `0x1532`; PID `0x007A` (cable) y `0x007B` (inalámbrico)
+- Nivel de batería: clase `0x07`, comando `0x80`; respuesta en `arguments[1]` (0–255, se convierte a %)
+- Estado de carga: clase `0x07`, comando `0x84`
+- Se prueban varios *transaction ID* (`0x3F`, `0x1F`, `0xFF`) y se recuerda el último que funcionó
 
 ### HyperX Cloud III S Wireless
 
-Communicates with the USB receiver through the manufacturer's HID interface, sends a battery query, and parses the response.
+Usa la colección vendor `usage_page 0x01C0` de la interfaz 3.
 
-The code identifies candidate HID interfaces and prioritizes those associated with the manufacturer's Usage Page. It also remembers the interface that successfully responded so it can try to reuse it for subsequent readings.
+- VID `0x03F0`; PID `0x02CC` y `0x06BE` (dos revisiones del mismo modelo)
+- Se envía el report `0x0C` con `02 03 01 00 06`; el porcentaje viene en el byte 6 de la respuesta
+- Un valor mayor de 100 indica que los auriculares están apagados
+- Los reports no solicitados que llegan por la misma colección se ignoran
 
-### Monitoring
+## Limitaciones
 
-Each device uses a shared background monitor that polls the battery every 30 seconds. Stream Deck keys are updated when the status or percentage changes to avoid unnecessary redraws.
+- Solo Windows.
+- Con los HyperX no se muestra el estado de carga: no se conoce cómo leerlo.
+- Solo se ha probado con un Viper Ultimate y con unos Cloud III S Wireless con PID `0x02CC`. Otras variantes del mismo modelo pueden necesitar ajustes.
+- Si Razer Synapse o NGENUITY están abiertos, pueden competir por el dispositivo.
 
-## Project Structure
+## Solución de problemas
 
-```text
-RazerBattery/
-├── BatteryAction.cs      # Stream Deck actions and key rendering
-├── BatteryMonitor.cs    # Periodic polling and battery state
-├── BatteryReading.cs    # Battery reading model and statuses
-├── RazerHid.cs          # HID communication with Razer Viper Ultimate
-├── HyperXHid.cs         # HID communication with HyperX Cloud III S Wireless
-├── Program.cs            # Plugin entry point
-├── manifest.json         # Stream Deck plugin metadata and actions
-├── RazerBattery.csproj   # .NET project and dependencies
-├── instalar.bat          # Build and installation script
-└── Images/               # Plugin and battery-level icons
-```
+El plugin escribe un log en `%APPDATA%\Elgato\StreamDeck\Plugins\com.jose.razerbattery.sdPlugin\pluginlog.log`.
 
-## Built With
+| Síntoma | Qué mirar |
+|---|---|
+| "sin dongle" / tecla gris | El dongle no está enchufado o Windows no lo ve |
+| El porcentaje no se actualiza con el dispositivo activo | El dongle responde pero la lectura falla (se sigue mostrando el último valor): mueve el ratón o enciende los auriculares y pulsa la tecla; si sigue igual, revisa el log |
+| La categoría no aparece | Comprueba que `instalar.bat` terminó sin errores y reinicia Stream Deck |
+| Error al restaurar paquetes | El proyecto usa `StreamDeck-Tools 7.*` y `HidSharp 2.1.0` desde NuGet |
 
-- C#
-- .NET Framework 4.8
-- [StreamDeck-Tools](https://github.com/BarRaider/streamdeck-tools)
-- [HidSharp](https://github.com/IntergatedCircuits/HidSharp)
-- SkiaSharp
-- Windows HID API
+## Estructura del proyecto
 
-## Known Limitations
+| Archivo | Función |
+|---|---|
+| `Program.cs` | Punto de entrada; Stream Deck lanza el exe con sus argumentos |
+| `BatteryAction.cs` | Acciones de tecla (una por dispositivo) y dibujo del icono y texto |
+| `BatteryMonitor.cs` | Sondeo periódico en segundo plano, uno por dispositivo |
+| `BatteryReading.cs` | Resultado inmutable de una lectura |
+| `RazerHid.cs` | Lectura HID del Viper Ultimate |
+| `HyperXHid.cs` | Lectura HID de los Cloud III S Wireless |
+| `manifest.json` | Definición del plugin para Stream Deck |
+| `Images/` | Iconos de las teclas y del plugin |
+| `instalar.bat` | Compila e instala el plugin |
 
-- Charging status for the HyperX Cloud III S Wireless is not implemented yet.
-- HyperX battery readings are obtained through the USB receiver; Bluetooth is not queried.
-- If a peripheral is powered off, asleep, or unresponsive, the plugin may retain the last known percentage while showing a `sleeping` status.
-- Support is currently limited to the listed models and USB identifiers. Other peripherals may use different protocols.
-- HID behavior may vary between hardware revisions or firmware versions.
+Para añadir otro dispositivo: crea una clase `XxxHid` con su lectura, añade un `BatteryMonitor` estático con su función de sondeo, una clase de acción que herede de `BatteryActionBase` y la entrada correspondiente en `manifest.json`.
 
-## Building
+## Créditos y referencias
 
-Build the project manually with:
+- Protocolo Razer: documentado por el proyecto [OpenRazer](https://github.com/openrazer/openrazer).
+- Protocolo de batería de los Cloud III S Wireless: documentado por la comunidad en el [issue #486 de HeadsetControl](https://github.com/Sapd/HeadsetControl/issues/486) y comprobado en el equipo del autor.
+- [StreamDeck-Tools](https://github.com/BarRaider/streamdeck-tools) de BarRaider, para la comunicación con Stream Deck.
+- [HidSharp](https://www.zer7.com/software/hidsharp), para enumerar dispositivos HID.
 
-```powershell
-dotnet build RazerBattery.csproj -c Release
-```
+Proyecto independiente, sin relación con Razer, HyperX/HP, Elgato ni BarRaider. Todas las marcas pertenecen a sus propietarios.
 
-The project produces a console application that Stream Deck launches as a plugin. It uses `StreamDeck-Tools` to manage actions and key updates.
+## Licencia
 
-## Credits
-
-- [BarRaider / StreamDeck-Tools](https://github.com/BarRaider/streamdeck-tools)
-- [HidSharp](https://github.com/IntergatedCircuits/HidSharp)
-
-## License
-
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+Por definir.

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <!-- .NET Framework 4.8 is included with Windows 10/11; no separate installation is needed to run it -->
+    <!-- .NET Framework 4.8 viene con Windows 10/11: no hay que instalar nada para ejecutarlo -->
     <TargetFramework>net48</TargetFramework>
     <PlatformTarget>x64</PlatformTarget>
     <LangVersion>latest</LangVersion>

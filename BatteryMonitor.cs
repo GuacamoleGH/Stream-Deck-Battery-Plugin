@@ -8,8 +8,8 @@ using HidSharp;
 namespace RazerBattery
 {
     /// <summary>
-    /// Polls a device battery in the background. There is one instance per device,
-    /// shared by all keys displaying it.
+    /// Sondea la batería de un dispositivo en segundo plano. Hay una instancia por dispositivo,
+    /// compartida por todas las teclas que lo muestren.
     /// </summary>
     internal sealed class BatteryMonitor
     {
@@ -25,7 +25,7 @@ namespace RazerBattery
         private bool started;
         private volatile BatteryReading latest = BatteryReading.Starting;
 
-        /// <summary>Short name displayed on the key.</summary>
+        /// <summary>Nombre corto que se dibuja en la tecla.</summary>
         public string Label { get; }
 
         private BatteryMonitor(string logName, string label, Func<BatteryReading, BatteryReading> poll)
@@ -53,7 +53,7 @@ namespace RazerBattery
             Task.Run(Loop);
         }
 
-        /// <summary>Wakes the polling loop for an immediate read instead of waiting 30 seconds.</summary>
+        /// <summary>Despierta el sondeo para leer ya, sin esperar a los 30 s.</summary>
         public void RefreshNow()
         {
             if (wake.CurrentCount == 0)
@@ -80,7 +80,7 @@ namespace RazerBattery
                 }
                 catch (Exception ex)
                 {
-                    Logger.Instance.LogMessage(TracingLevel.ERROR, logName + ": error reading battery: " + ex);
+                    Logger.Instance.LogMessage(TracingLevel.ERROR, logName + ": error leyendo la batería: " + ex);
                 }
 
                 await wake.WaitAsync(TimeSpan.FromSeconds(PollSeconds)).ConfigureAwait(false);
@@ -115,10 +115,10 @@ namespace RazerBattery
 
             int value;
             string name;
-            // Values above 100 mean the headphones are powered off (the receiver still responds).
+            // Valores por encima de 100 = auriculares apagados (el dongle responde igualmente).
             if (HyperXHid.TryReadBattery(devices, out value, out name) && value <= 100)
             {
-                // Charging status is not yet available for these headphones.
+                // Aún no se sabe leer el estado de carga de estos auriculares.
                 return new BatteryReading(BatteryStatus.Ok, value, false, name);
             }
             return new BatteryReading(BatteryStatus.NoResponse, previous.Percent, previous.Charging, previous.DeviceName);
