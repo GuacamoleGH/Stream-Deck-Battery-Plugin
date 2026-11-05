@@ -7,18 +7,18 @@ Plugin de Stream Deck para Windows que muestra en una tecla el porcentaje de bat
 
 Lee los dispositivos **directamente por HID**: no necesita Razer Synapse ni HyperX NGENUITY, ni ningún servidor o script en segundo plano. Stream Deck arranca el plugin solo.
 
-<!-- Añade aquí una captura: ![Teclas del plugin](docs/captura.png) -->
+![Teclas del plugin](docs/battery.png) ![Plugin en Stream Deck](docs/plugin.png)
 
 ## Qué muestra la tecla
 
-| Situación | Icono |
-|---|---|
-| Más del 50 % | Verde |
-| Entre 21 % y 50 % | Amarillo |
-| 20 % o menos | Rojo |
-| Cargando (solo Viper) | Azul con rayo |
+| Situación                     | Icono                                                      |
+| ----------------------------- | ---------------------------------------------------------- |
+| Más del 50 %                  | Verde                                                      |
+| Entre 21 % y 50 %             | Amarillo                                                   |
+| 20 % o menos                  | Rojo                                                       |
+| Cargando (solo Viper)         | Azul con rayo                                              |
 | Dispositivo dormido o apagado | Mantiene el icono de color y el último porcentaje conocido |
-| Sin dongle o arrancando | Gris, con un aviso (y el último valor si lo hubo) |
+| Sin dongle o arrancando       | Gris, con un aviso (y el último valor si lo hubo)          |
 
 Cada tecla lleva el porcentaje debajo de la batería y una etiqueta con el nombre del dispositivo. Se actualiza cada 30 segundos; al pulsar la tecla fuerza una lectura inmediata.
 
@@ -48,12 +48,12 @@ Cada dispositivo tiene un monitor que consulta la batería en segundo plano y co
 
 ### Razer Viper Ultimate
 
-Usa el protocolo Razer de 90 bytes enviado como *feature report* (`HidD_SetFeature` / `HidD_GetFeature`), abriendo la interfaz HID con acceso 0 igual que hace `hidapi`.
+Usa el protocolo Razer de 90 bytes enviado como _feature report_ (`HidD_SetFeature` / `HidD_GetFeature`), abriendo la interfaz HID con acceso 0 igual que hace `hidapi`.
 
 - VID `0x1532`; PID `0x007A` (cable) y `0x007B` (inalámbrico)
 - Nivel de batería: clase `0x07`, comando `0x80`; respuesta en `arguments[1]` (0–255, se convierte a %)
 - Estado de carga: clase `0x07`, comando `0x84`
-- Se prueban varios *transaction ID* (`0x3F`, `0x1F`, `0xFF`) y se recuerda el último que funcionó
+- Se prueban varios _transaction ID_ (`0x3F`, `0x1F`, `0xFF`) y se recuerda el último que funcionó
 
 ### HyperX Cloud III S Wireless
 
@@ -75,26 +75,26 @@ Usa la colección vendor `usage_page 0x01C0` de la interfaz 3.
 
 El plugin escribe un log en `%APPDATA%\Elgato\StreamDeck\Plugins\com.jose.razerbattery.sdPlugin\pluginlog.log`.
 
-| Síntoma | Qué mirar |
-|---|---|
-| "sin dongle" / tecla gris | El dongle no está enchufado o Windows no lo ve |
+| Síntoma                                                 | Qué mirar                                                                                                                                                                |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| "sin dongle" / tecla gris                               | El dongle no está enchufado o Windows no lo ve                                                                                                                           |
 | El porcentaje no se actualiza con el dispositivo activo | El dongle responde pero la lectura falla (se sigue mostrando el último valor): mueve el ratón o enciende los auriculares y pulsa la tecla; si sigue igual, revisa el log |
-| La categoría no aparece | Comprueba que `instalar.bat` terminó sin errores y reinicia Stream Deck |
-| Error al restaurar paquetes | El proyecto usa `StreamDeck-Tools 7.*` y `HidSharp 2.1.0` desde NuGet |
+| La categoría no aparece                                 | Comprueba que `instalar.bat` terminó sin errores y reinicia Stream Deck                                                                                                  |
+| Error al restaurar paquetes                             | El proyecto usa `StreamDeck-Tools 7.*` y `HidSharp 2.1.0` desde NuGet                                                                                                    |
 
 ## Estructura del proyecto
 
-| Archivo | Función |
-|---|---|
-| `Program.cs` | Punto de entrada; Stream Deck lanza el exe con sus argumentos |
-| `BatteryAction.cs` | Acciones de tecla (una por dispositivo) y dibujo del icono y texto |
-| `BatteryMonitor.cs` | Sondeo periódico en segundo plano, uno por dispositivo |
-| `BatteryReading.cs` | Resultado inmutable de una lectura |
-| `RazerHid.cs` | Lectura HID del Viper Ultimate |
-| `HyperXHid.cs` | Lectura HID de los Cloud III S Wireless |
-| `manifest.json` | Definición del plugin para Stream Deck |
-| `Images/` | Iconos de las teclas y del plugin |
-| `instalar.bat` | Compila e instala el plugin |
+| Archivo             | Función                                                            |
+| ------------------- | ------------------------------------------------------------------ |
+| `Program.cs`        | Punto de entrada; Stream Deck lanza el exe con sus argumentos      |
+| `BatteryAction.cs`  | Acciones de tecla (una por dispositivo) y dibujo del icono y texto |
+| `BatteryMonitor.cs` | Sondeo periódico en segundo plano, uno por dispositivo             |
+| `BatteryReading.cs` | Resultado inmutable de una lectura                                 |
+| `RazerHid.cs`       | Lectura HID del Viper Ultimate                                     |
+| `HyperXHid.cs`      | Lectura HID de los Cloud III S Wireless                            |
+| `manifest.json`     | Definición del plugin para Stream Deck                             |
+| `Images/`           | Iconos de las teclas y del plugin                                  |
+| `instalar.bat`      | Compila e instala el plugin                                        |
 
 Para añadir otro dispositivo: crea una clase `XxxHid` con su lectura, añade un `BatteryMonitor` estático con su función de sondeo, una clase de acción que herede de `BatteryActionBase` y la entrada correspondiente en `manifest.json`.
 
