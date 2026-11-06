@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RazerBattery")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.1.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.1.0+0633e1dae2f2aa11592843b2c2defca528ebc505")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.1.0+6c1fc92395e55689edcb968d4fd676787b67bea1")]
 [assembly: System.Reflection.AssemblyProductAttribute("RazerBattery")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RazerBattery")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.1.0.0")]
