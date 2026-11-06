@@ -27,6 +27,7 @@ namespace RazerBattery
     {
         private static readonly SKColor Gray = SKColor.Parse("#9aa0a6");
         private static readonly SKColor LabelColor = SKColor.Parse("#d0d4d8");
+        private static readonly SKColor MoonColor = SKColor.Parse("#f4d06f");
 
         // Los iconos se cargan una vez y se reutilizan (no se liberan: viven lo que el plugin).
         private static readonly Dictionary<string, SKBitmap> IconCache = new Dictionary<string, SKBitmap>();
@@ -82,7 +83,7 @@ namespace RazerBattery
 
             using (SKBitmap image = SkiaTools.GenerateGenericKeyImage(out SKCanvas canvas))
             {
-                DrawKey(canvas, image.Width, reading, monitor.Label);
+                DrawKey(canvas, image.Width, reading, monitor);
                 canvas.Dispose();
                 await Connection.SetImageAsync(image);
             }
@@ -136,7 +137,27 @@ namespace RazerBattery
             }
         }
 
-        private static void DrawKey(SKCanvas canvas, int width, BatteryReading r, string label)
+        private static void DrawMoon(SKCanvas canvas, float cx, float cy, float r)
+        {
+            using (var outer = new SKPath())
+            using (var inner = new SKPath())
+            {
+                outer.AddCircle(cx, cy, r);
+                inner.AddCircle(cx - r * 0.45f, cy - r * 0.2f, r * 0.82f);
+                using (SKPath moon = outer.Op(inner, SKPathOp.Difference))
+                {
+                    if (moon != null)
+                    {
+                        using (var paint = new SKPaint { Color = MoonColor, IsAntialias = true, Style = SKPaintStyle.Fill })
+                        {
+                            canvas.DrawPath(moon, paint);
+                        }
+                    }
+                }
+            }
+        }
+
+        private static void DrawKey(SKCanvas canvas, int width, BatteryReading r, BatteryMonitor monitor)
         {
             canvas.Clear(SKColors.Black);
             canvas.DrawBitmap(LoadIcon(IconFor(r)), 0, 0);
@@ -153,22 +174,56 @@ namespace RazerBattery
                 canvas.DrawTextLine(text, font, paint, new SKPoint(x, 96));
             }
 
-            // Mensaje de estado cuando no hay lectura fresca (arriba de la batería)
-            string note = label;
+            // Mensaje o etiqueta arriba de la batería
+            string note = monitor.Label;
+            bool showMoon = false;
+            bool isAlert = false;
+
             switch (r.Status)
             {
-                case BatteryStatus.Starting: note = "leyendo..."; break;
-                case BatteryStatus.NoDevice: note = "sin dongle"; break;
+                case BatteryStatus.Starting:
+                    note = "leyendo...";
+                    isAlert = true;
+                    break;
+                case BatteryStatus.NoDevice:
+                    note = "desconectado";
+                    isAlert = true;
+                    break;
+                case BatteryStatus.NoResponse:
+                    if (monitor.Kind == DeviceKind.Mouse)
+                    {
+                        // Ratón dormido: mantiene la etiqueta (ej. "Viper") y muestra la lunita
+                        note = monitor.Label;
+                        showMoon = true;
+                    }
+                    else
+                    {
+                        // Cascos apagados: el dongle está conectado pero el auricular está apagado
+                        note = "apagados";
+                        isAlert = true;
+                    }
+                    break;
+                case BatteryStatus.Ok:
+                    note = monitor.Label;
+                    break;
             }
+
             if (note != null)
             {
-                // Etiqueta (lectura buena) en claro; avisos de estado en gris.
-                SKColor noteColor = live ? LabelColor : Gray;
-                using (SKFont small = SkiaTools.CreateFont("Arial", 19, SKFontStyle.Bold))
+                SKColor noteColor = isAlert ? Gray : LabelColor;
+                float fontSize = note.Length > 10 ? 16f : 19f;
+
+                using (SKFont small = SkiaTools.CreateFont("Arial", fontSize, SKFontStyle.Bold))
                 using (var paint = new SKPaint { Color = noteColor, IsAntialias = true })
                 {
-                    float x = canvas.GetTextCenter(note, width, small);
+                    float noteWidth = small.MeasureText(note);
+                    float x = (width - noteWidth) / 2f;
                     canvas.DrawTextLine(note, small, paint, new SKPoint(x, 23));
+
+                    if (showMoon)
+                    {
+                        DrawMoon(canvas, x + noteWidth + 8, 16, 6.5f);
+                    }
                 }
             }
         }

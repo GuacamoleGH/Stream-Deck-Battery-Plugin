@@ -7,14 +7,20 @@ using HidSharp;
 
 namespace RazerBattery
 {
+    internal enum DeviceKind
+    {
+        Mouse,
+        Headset
+    }
+
     /// <summary>
     /// Sondea la batería de un dispositivo en segundo plano. Hay una instancia por dispositivo,
     /// compartida por todas las teclas que lo muestren.
     /// </summary>
     internal sealed class BatteryMonitor
     {
-        public static readonly BatteryMonitor Razer = new BatteryMonitor("Razer", "Viper", PollRazer);
-        public static readonly BatteryMonitor HyperX = new BatteryMonitor("HyperX", "Cloud III S", PollHyperX);
+        public static readonly BatteryMonitor Razer = new BatteryMonitor("Razer", "Viper", DeviceKind.Mouse, PollRazer);
+        public static readonly BatteryMonitor HyperX = new BatteryMonitor("HyperX", "Cloud III S", DeviceKind.Headset, PollHyperX);
 
         private const int PollSeconds = 30;
 
@@ -28,11 +34,15 @@ namespace RazerBattery
         /// <summary>Nombre corto que se dibuja en la tecla.</summary>
         public string Label { get; }
 
-        private BatteryMonitor(string logName, string label, Func<BatteryReading, BatteryReading> poll)
+        /// <summary>Tipo de periférico (ratón, auriculares, etc.).</summary>
+        public DeviceKind Kind { get; }
+
+        private BatteryMonitor(string logName, string label, DeviceKind kind, Func<BatteryReading, BatteryReading> poll)
         {
             this.logName = logName;
             this.poll = poll;
             Label = label;
+            Kind = kind;
         }
 
         public BatteryReading Latest

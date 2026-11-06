@@ -14,16 +14,18 @@ It reads the devices **directly over HID**: it needs neither Razer Synapse nor H
 
 ## What the key shows
 
-| Situation | Icon |
+| Situation | Icon and text |
 |---|---|
 | Above 50% | Green |
 | 21% to 50% | Yellow |
 | 20% or less | Red |
 | Charging (Viper only) | Blue with a lightning bolt |
-| Device asleep or switched off | Keeps the colored icon and the last known percentage |
-| No dongle, or starting up | Gray, with a notice (and the last value, if there was one) |
+| Mouse asleep | Keeps the colored icon, percentage, and shows a crescent moon (`Viper 🌙`) |
+| Headset switched off | Keeps the colored icon, percentage, and shows `"apagados"` |
+| Disconnected (no dongle) | Gray, with `"desconectado"` notice |
+| Starting up | Gray, with `"leyendo..."` notice |
 
-Each key shows the percentage under the battery and a label with the device name. It refreshes every 30 seconds; pressing the key forces an immediate reading.
+Each key shows the percentage under the battery and a label with the device name or current status. It refreshes every 30 seconds; pressing the key forces an immediate reading.
 
 ## Requirements
 
@@ -80,7 +82,7 @@ The plugin writes a log to `%APPDATA%\Elgato\StreamDeck\Plugins\com.jose.razerba
 
 | Symptom | What to check |
 |---|---|
-| "sin dongle" (no dongle) / gray key | The dongle is not plugged in, or Windows can't see it |
+| "desconectado" (disconnected) / gray key | The dongle is not plugged in, or Windows can't see it |
 | The percentage doesn't update while the device is active | The dongle answers but the reading fails (the last value stays on screen): move the mouse or switch the headset on and press the key; if it persists, check the log |
 | The category doesn't appear | Check that `instalar.bat` finished without errors and restart Stream Deck |
 | Package restore error | The project uses `StreamDeck-Tools 7.*` and `HidSharp 2.1.0` from NuGet |
