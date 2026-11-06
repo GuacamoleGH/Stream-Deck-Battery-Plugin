@@ -195,11 +195,11 @@ namespace RazerBattery
             switch (r.Status)
             {
                 case BatteryStatus.Starting:
-                    note = "leyendo...";
+                    note = "Leyendo...";
                     isAlert = true;
                     break;
                 case BatteryStatus.NoDevice:
-                    note = "desconectado";
+                    note = "Desconectado";
                     isAlert = true;
                     break;
                 case BatteryStatus.NoResponse:
@@ -212,7 +212,7 @@ namespace RazerBattery
                     else
                     {
                         // Cascos apagados: el dongle está conectado pero el auricular está apagado
-                        note = "apagados";
+                        note = "Apagados";
                         isAlert = true;
                     }
                     break;
