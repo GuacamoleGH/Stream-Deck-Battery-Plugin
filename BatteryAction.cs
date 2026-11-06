@@ -143,7 +143,8 @@ namespace RazerBattery
             using (var inner = new SKPath())
             {
                 outer.AddCircle(cx, cy, r);
-                inner.AddCircle(cx - r * 0.45f, cy - r * 0.2f, r * 0.82f);
+                // Círculo interior desplazado hacia la derecha para tallar un creciente lunar clásico y vertical (🌙)
+                inner.AddCircle(cx + r * 0.52f, cy - r * 0.08f, r * 0.86f);
                 using (SKPath moon = outer.Op(inner, SKPathOp.Difference))
                 {
                     if (moon != null)
@@ -217,12 +218,19 @@ namespace RazerBattery
                 using (var paint = new SKPaint { Color = noteColor, IsAntialias = true })
                 {
                     float noteWidth = small.MeasureText(note);
-                    float x = (width - noteWidth) / 2f;
-                    canvas.DrawTextLine(note, small, paint, new SKPoint(x, 23));
+                    float moonRadius = 6.5f;
+                    float moonGap = 6f;
+                    // Centrar conjuntamente el texto y la lunita como un único bloque armonioso
+                    float totalHeaderWidth = showMoon ? (noteWidth + moonGap + moonRadius * 2f) : noteWidth;
+                    float startX = (width - totalHeaderWidth) / 2f;
+
+                    canvas.DrawTextLine(note, small, paint, new SKPoint(startX, 23));
 
                     if (showMoon)
                     {
-                        DrawMoon(canvas, x + noteWidth + 8, 16, 6.5f);
+                        float moonCenterX = startX + noteWidth + moonGap + moonRadius;
+                        float moonCenterY = 15.5f; // Centro óptico vertical exacto con el texto de 19 pt
+                        DrawMoon(canvas, moonCenterX, moonCenterY, moonRadius);
                     }
                 }
             }
