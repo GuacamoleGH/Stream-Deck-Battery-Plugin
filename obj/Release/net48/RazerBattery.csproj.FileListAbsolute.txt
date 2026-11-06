@@ -39,3 +39,45 @@ C:\Users\Jose\Downloads\Battery-Plugin\obj\Release\net48\RazerBattery.csproj.Cor
 C:\Users\Jose\Downloads\Battery-Plugin\obj\Release\net48\RazerBat.B8A5008D.Up2Date
 C:\Users\Jose\Downloads\Battery-Plugin\obj\Release\net48\RazerBattery.exe
 C:\Users\Jose\Downloads\Battery-Plugin\obj\Release\net48\RazerBattery.pdb
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\Images\actionIcon.png
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\Images\actionIcon@2x.png
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\Images\battcharge.png
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\Images\battgreen.png
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\Images\battred.png
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\Images\battyellow.png
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\Images\categoryIcon.png
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\Images\categoryIcon@2x.png
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\Images\keyIcon.png
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\Images\keyIcon@2x.png
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\Images\pluginAction.png
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\Images\pluginIcon.png
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\Images\pluginIcon@2x.png
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\manifest.json
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\x86\libSkiaSharp.dll
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\x64\libSkiaSharp.dll
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\arm64\libSkiaSharp.dll
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\libSkiaSharp.dylib
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\RazerBattery.exe.config
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\RazerBattery.exe
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\RazerBattery.pdb
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\CommandLine.dll
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\HidSharp.dll
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\Newtonsoft.Json.dll
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\NLog.dll
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\SkiaSharp.dll
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\StreamDeckTools.dll
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\System.Buffers.dll
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\System.Memory.dll
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\System.Numerics.Vectors.dll
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\System.Runtime.CompilerServices.Unsafe.dll
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\libSkiaSharp.dll
+F:\Proyectos VSC\StreamDeck Battery Plugin\bin\Release\net48\libSkiaSharp.pdb
+F:\Proyectos VSC\StreamDeck Battery Plugin\obj\Release\net48\RazerBattery.csproj.AssemblyReference.cache
+F:\Proyectos VSC\StreamDeck Battery Plugin\obj\Release\net48\RazerBattery.GeneratedMSBuildEditorConfig.editorconfig
+F:\Proyectos VSC\StreamDeck Battery Plugin\obj\Release\net48\RazerBattery.AssemblyInfoInputs.cache
+F:\Proyectos VSC\StreamDeck Battery Plugin\obj\Release\net48\RazerBattery.AssemblyInfo.cs
+F:\Proyectos VSC\StreamDeck Battery Plugin\obj\Release\net48\RazerBattery.csproj.CoreCompileInputs.cache
+F:\Proyectos VSC\StreamDeck Battery Plugin\obj\Release\net48\RazerBattery.sourcelink.json
+F:\Proyectos VSC\StreamDeck Battery Plugin\obj\Release\net48\RazerBat.B8A5008D.Up2Date
+F:\Proyectos VSC\StreamDeck Battery Plugin\obj\Release\net48\RazerBattery.exe
+F:\Proyectos VSC\StreamDeck Battery Plugin\obj\Release\net48\RazerBattery.pdb

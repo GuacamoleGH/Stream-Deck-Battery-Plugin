@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Jgql/WyaT8c=",
+  "dgSpecHash": "1brBlDK1M+k=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Jose\\Downloads\\Battery-Plugin\\RazerBattery.csproj",
+  "projectFilePath": "F:\\Proyectos VSC\\StreamDeck Battery Plugin\\RazerBattery.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Jose\\.nuget\\packages\\commandlineparser\\2.9.1\\commandlineparser.2.9.1.nupkg.sha512",
     "C:\\Users\\Jose\\.nuget\\packages\\hidsharp\\2.1.0\\hidsharp.2.1.0.nupkg.sha512",

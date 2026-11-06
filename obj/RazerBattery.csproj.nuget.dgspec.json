@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Jose\\Downloads\\Battery-Plugin\\RazerBattery.csproj": {}
+    "F:\\Proyectos VSC\\StreamDeck Battery Plugin\\RazerBattery.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Jose\\Downloads\\Battery-Plugin\\RazerBattery.csproj": {
+    "F:\\Proyectos VSC\\StreamDeck Battery Plugin\\RazerBattery.csproj": {
       "version": "1.1.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Jose\\Downloads\\Battery-Plugin\\RazerBattery.csproj",
+        "projectUniqueName": "F:\\Proyectos VSC\\StreamDeck Battery Plugin\\RazerBattery.csproj",
         "projectName": "RazerBattery",
-        "projectPath": "C:\\Users\\Jose\\Downloads\\Battery-Plugin\\RazerBattery.csproj",
+        "projectPath": "F:\\Proyectos VSC\\StreamDeck Battery Plugin\\RazerBattery.csproj",
         "packagesPath": "C:\\Users\\Jose\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Jose\\Downloads\\Battery-Plugin\\obj\\",
+        "outputPath": "F:\\Proyectos VSC\\StreamDeck Battery Plugin\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Jose\\AppData\\Roaming\\NuGet\\NuGet.Config"
