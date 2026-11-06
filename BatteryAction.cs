@@ -90,21 +90,33 @@ namespace RazerBattery
         }
 
         /// <summary>
-        /// Hay un porcentaje que mostrar con normalidad: lectura buena, o dispositivo dormido
+        /// Hay un porcentaje que mostrar con normalidad: lectura buena, o ratón dormido
         /// (el dongle está pero no contesta) con un valor conocido de antes.
+        /// En auriculares apagados no se considera usable para que se muestre en gris (igual que desconectado).
         /// </summary>
-        private static bool IsUsable(BatteryReading r)
+        private static bool IsUsable(BatteryReading r, BatteryMonitor monitor)
         {
-            return r.Percent >= 0
-                && (r.Status == BatteryStatus.Ok || r.Status == BatteryStatus.NoResponse);
+            if (r.Percent < 0)
+            {
+                return false;
+            }
+            if (r.Status == BatteryStatus.Ok)
+            {
+                return true;
+            }
+            if (r.Status == BatteryStatus.NoResponse && monitor.Kind == DeviceKind.Mouse)
+            {
+                return true;
+            }
+            return false;
         }
 
         /// <summary>Qué icono toca según el estado.</summary>
-        private static string IconFor(BatteryReading r)
+        private static string IconFor(BatteryReading r, BatteryMonitor monitor)
         {
-            if (!IsUsable(r))
+            if (!IsUsable(r, monitor))
             {
-                return "pluginAction.png";   // gris: aún sin ningún valor, o dispositivo no encontrado
+                return "pluginAction.png";   // gris: apagado, desconectado, o aún sin valor
             }
             if (r.Status == BatteryStatus.Ok && r.Charging)
             {
@@ -161,9 +173,9 @@ namespace RazerBattery
         private static void DrawKey(SKCanvas canvas, int width, BatteryReading r, BatteryMonitor monitor)
         {
             canvas.Clear(SKColors.Black);
-            canvas.DrawBitmap(LoadIcon(IconFor(r)), 0, 0);
+            canvas.DrawBitmap(LoadIcon(IconFor(r, monitor)), 0, 0);
 
-            bool live = IsUsable(r);
+            bool live = IsUsable(r, monitor);
             bool hasValue = r.Percent >= 0;
 
             // Porcentaje debajo de la batería del icono

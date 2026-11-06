@@ -21,8 +21,8 @@ It reads the devices **directly over HID**: it needs neither Razer Synapse nor H
 | 20% or less | Red |
 | Charging (Viper only) | Blue with a lightning bolt |
 | Mouse asleep | Keeps the colored icon, percentage, and shows a crescent moon (`Viper 🌙`) |
-| Headset switched off | Keeps the colored icon, percentage, and shows `"apagados"` |
-| Disconnected (no dongle) | Gray, with `"desconectado"` notice |
+| Headset switched off | Gray icon, gray percentage, and `"apagados"` notice |
+| Disconnected (no dongle) | Gray icon, gray percentage, and `"desconectado"` notice |
 | Starting up | Gray, with `"leyendo..."` notice |
 
 Each key shows the percentage under the battery and a label with the device name or current status. It refreshes every 30 seconds; pressing the key forces an immediate reading.

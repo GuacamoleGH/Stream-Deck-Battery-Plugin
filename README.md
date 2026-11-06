@@ -21,8 +21,8 @@ Lee los dispositivos **directamente por HID**: no necesita Razer Synapse ni Hype
 | 20 % o menos | Rojo |
 | Cargando (solo Viper) | Azul con rayo |
 | Ratón dormido | Mantiene el icono de color, porcentaje y muestra una lunita (`Viper 🌙`) |
-| Cascos apagados | Mantiene el icono de color, porcentaje y muestra el aviso `"apagados"` |
-| Desconectado (sin dongle) | Gris, con aviso `"desconectado"` |
+| Cascos apagados | Icono gris, porcentaje en gris y aviso `"apagados"` |
+| Desconectado (sin dongle) | Icono gris, porcentaje en gris y aviso `"desconectado"` |
 | Arrancando | Gris, con aviso `"leyendo..."` |
 
 Cada tecla lleva el porcentaje debajo de la batería y una etiqueta con el nombre del dispositivo o su estado. Se actualiza cada 30 segundos; al pulsar la tecla fuerza una lectura inmediata.
