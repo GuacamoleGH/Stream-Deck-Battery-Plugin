@@ -25,8 +25,6 @@ namespace RazerBattery
     /// <summary>Lógica común: dibuja el icono y el porcentaje de un BatteryMonitor.</summary>
     public abstract class BatteryActionBase : KeypadBase
     {
-        private static readonly SKColor Gray = SKColor.Parse("#9aa0a6");
-        private static readonly SKColor LabelColor = SKColor.Parse("#d0d4d8");
         private static readonly SKColor MoonColor = SKColor.Parse("#f4d06f");
 
         // Los iconos se cargan una vez y se reutilizan (no se liberan: viven lo que el plugin).
@@ -181,7 +179,7 @@ namespace RazerBattery
             // Porcentaje debajo de la batería del icono
             string text = hasValue ? r.Percent + "%" : "--";
             using (SKFont font = SkiaTools.CreateFont("Arial", 28, SKFontStyle.Bold))
-            using (var paint = new SKPaint { Color = live ? SKColors.White : Gray, IsAntialias = true })
+            using (var paint = new SKPaint { Color = SKColors.White, IsAntialias = true })
             {
                 float x = canvas.GetTextCenter(text, width, font);
                 canvas.DrawTextLine(text, font, paint, new SKPoint(x, 96));
@@ -190,17 +188,14 @@ namespace RazerBattery
             // Mensaje o etiqueta arriba de la batería
             string note = monitor.Label;
             bool showMoon = false;
-            bool isAlert = false;
 
             switch (r.Status)
             {
                 case BatteryStatus.Starting:
                     note = "Leyendo...";
-                    isAlert = true;
                     break;
                 case BatteryStatus.NoDevice:
                     note = "Desconectado";
-                    isAlert = true;
                     break;
                 case BatteryStatus.NoResponse:
                     if (monitor.Kind == DeviceKind.Mouse)
@@ -213,7 +208,6 @@ namespace RazerBattery
                     {
                         // Cascos apagados: el dongle está conectado pero el auricular está apagado
                         note = "Apagados";
-                        isAlert = true;
                     }
                     break;
                 case BatteryStatus.Ok:
@@ -223,11 +217,10 @@ namespace RazerBattery
 
             if (note != null)
             {
-                SKColor noteColor = isAlert ? Gray : LabelColor;
                 float fontSize = note.Length > 10 ? 16f : 19f;
 
                 using (SKFont small = SkiaTools.CreateFont("Arial", fontSize, SKFontStyle.Bold))
-                using (var paint = new SKPaint { Color = noteColor, IsAntialias = true })
+                using (var paint = new SKPaint { Color = SKColors.White, IsAntialias = true })
                 {
                     float noteWidth = small.MeasureText(note);
                     float moonRadius = 7.5f;
